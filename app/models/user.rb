@@ -8,4 +8,6 @@ class User < ActiveRecord::Base
 
   has_many :events
   has_many :childs
+  has_one :role
+  # validates_presence_of :role
 end
