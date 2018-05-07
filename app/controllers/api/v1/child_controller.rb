@@ -1,13 +1,14 @@
 class Api::V1::ChildController < ApplicationController
+    before_action :child_find, only: [:update, :show, :destroy]
     before_action :authenticate_user!
-    before_action :authenticate_admin, :only => [:index]
+    before_action :authenticate_admin
     def index
         @children = Child.where(user_id: current_user.id)
         render json: @children   
     end
 
     def show
-        render json: @child
+        render json: @child    
     end
 
     def create
@@ -28,13 +29,16 @@ class Api::V1::ChildController < ApplicationController
     end
 
     def destroy
-        @child.destroy
+        if @child.present?
+            @child.destroy
+        end
+        render json: {status: "deleted"}
     end
 
     
     private
         def child_find
-            @child = Child.find(params[:id])
+            @child = Child.find(params[:id])         
         end
         
         def child_params
